@@ -7,13 +7,13 @@ namespace SymmetricEncryption
 {
     public class AesCryptography
     {
-        public static string EncryptString(string key, string plainText) {
-            byte[] iv = new byte[16];
+        public static string EncryptString(string key, string iv, string plainText) {
+            
             byte[] array;
 
             using (Aes aes = Aes.Create()) {
                 aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = iv;
+                aes.IV = Encoding.UTF8.GetBytes(iv);
 
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
@@ -31,13 +31,13 @@ namespace SymmetricEncryption
             return Convert.ToBase64String(array);
         }
 
-        public static string DecryptString(string key, string cipherText) {
-            byte[] iv = new byte[16];
+        public static string DecryptString(string key, string iv, string cipherText) {
+            
             byte[] buffer = Convert.FromBase64String(cipherText);
 
             using (Aes aes = Aes.Create()) {
                 aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = iv;
+                aes.IV = Encoding.UTF8.GetBytes(iv);
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
                 using (MemoryStream memoryStream = new MemoryStream(buffer)) {
