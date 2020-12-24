@@ -7,18 +7,33 @@ namespace SymmetricEncryption
     class Program
     {
         static void Main(string[] args) {
-           
-            var key = "b14ca5898a4e4133bbce2ea2315a1916";
-            var IV = "1234567887654321";
-            Console.WriteLine("Please enter a string for encryption");
-            var str = Console.ReadLine();
-            var encryptedString = AesCryptography.EncryptString(key, IV,str);
-            Console.WriteLine($"encrypted string = {encryptedString}");
-            var decryptedString = AesCryptography.DecryptString(key, IV, encryptedString);
-            Console.WriteLine($"decrypted string = {decryptedString}");
-            Console.ReadKey();
+
+            
+            string salt = "1234", pin = "pin", biccode = "sblbic", vid = "arnab@user.idtp";
+
+            for (int i = 0; i < 1000; i++) {
+                string combinedString = AesCryptography.ProcessPin(pin, biccode, vid, salt);
+                string dycryptedpinbic = AesCryptography.RetriveAndStorePin(biccode, vid, salt, combinedString);
+
+                //Validate
+                string hasedPinBic = AesCryptography.HashSha512(pin + biccode);
+                string doubleHasedPinBic = AesCryptography.HashSha512(hasedPinBic);
+                string message;
+                if (dycryptedpinbic.Equals(doubleHasedPinBic)) message = "Valid User";
+                else message = "Invalid User";
+                Console.WriteLine(message);
+            }            
+
+            //Test plain encryption decryption
+            //Console.WriteLine("Please enter a string for encryption");
+            //var str = Console.ReadLine();
+            //var encryptedString = AesCryptography.EncryptString(key, salt, str);
+            //Console.WriteLine($"encrypted string = {encryptedString}");
+            //var decryptedString = AesCryptography.DecryptString(key, salt, encryptedString);
+            //Console.WriteLine($"decrypted string = {decryptedString}");
+            //Console.ReadKey();
         }
-       
+
     }
 
 }
